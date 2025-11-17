@@ -53,6 +53,59 @@ function ThemeToggle({ theme, setTheme }) {
   );
 }
 
+/* ----------------------------------------------------
+   📌 NEW SOFTWARE DETAILS SECTION
+-----------------------------------------------------*/
+function AboutSection() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="card mb-8"
+    >
+      <h2 className="text-2xl font-semibold mb-2">What is Insight?</h2>
+      <p className="muted mb-4">
+        Insight is an intelligent data analytics dashboard designed to process CSV datasets 
+        instantly. It extracts meaningful KPIs, identifies missing values and outliers, 
+        and visualizes your data with clean, interactive charts — all powered by a 
+        fast Flask backend and a modern React + Tailwind frontend.
+      </p>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div className="p-4 rounded-md glass">
+          <h3 className="text-lg font-medium mb-1">📊 Automated KPI Extraction</h3>
+          <p className="muted text-sm">
+            Rows, columns, missing values, outliers and basic stats — extracted within seconds.
+          </p>
+        </div>
+
+        <div className="p-4 rounded-md glass">
+          <h3 className="text-lg font-medium mb-1">📈 Interactive Visualizations</h3>
+          <p className="muted text-sm">
+            Beautiful line charts generated dynamically using Recharts.
+          </p>
+        </div>
+
+        <div className="p-4 rounded-md glass">
+          <h3 className="text-lg font-medium mb-1">⚡ Modern & Fast Architecture</h3>
+          <p className="muted text-sm">
+            Built with React + Tailwind + Vite, backed by a Python Flask API.
+          </p>
+        </div>
+      </div>
+
+      <p className="muted mt-4 text-sm">
+        A clean, lightweight, and high-performance tool suitable for developers, students, 
+        data analysts, and anyone working with CSV datasets.
+      </p>
+    </motion.div>
+  );
+}
+
+/* ----------------------------------------------------
+   UPLOAD CARD
+-----------------------------------------------------*/
 function UploadCard({ onResult }) {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -93,7 +146,7 @@ function UploadCard({ onResult }) {
       >
         <h2 className="text-xl font-medium mb-2">Upload CSV</h2>
         <p className="muted mb-4">
-          Drag & drop or click to choose a CSV. The backend analyzes and returns KPIs.
+          Drag & drop or click to choose a CSV dataset. Insight will process and visualize it instantly.
         </p>
 
         <div className="flex gap-4 items-center">
@@ -140,6 +193,9 @@ function UploadCard({ onResult }) {
   );
 }
 
+/* ----------------------------------------------------
+   KPI GRID
+-----------------------------------------------------*/
 function KPIGrid({ summary }) {
   if (!summary) return null;
 
@@ -159,6 +215,9 @@ function KPIGrid({ summary }) {
   );
 }
 
+/* ----------------------------------------------------
+   CHART PANE
+-----------------------------------------------------*/
 function ChartPane({ sample }) {
   if (!sample || Object.keys(sample).length === 0)
     return <div className="card muted">No numeric columns to chart.</div>;
@@ -193,6 +252,9 @@ function ChartPane({ sample }) {
   );
 }
 
+/* ----------------------------------------------------
+   ROOT COMPONENT
+-----------------------------------------------------*/
 export default function App() {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
 
@@ -208,6 +270,9 @@ export default function App() {
   return (
     <div className="container">
       <Navbar theme={theme} setTheme={setTheme} />
+
+      {/* 📌 NEW DETAILS SECTION */}
+      <AboutSection />
 
       <UploadCard onResult={data => setResult(data)} />
 
