@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>InsightHub — AI-Powered Analytics Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- AOS (animation) CDN -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+</head>
+<body>
+<div class="container" id="app">
+  <header class="topbar">
+    <h1>InsightHub</h1>
+    <div class="controls">
+      <label class="switch">
+        <input type="checkbox" id="darkToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </header>
+
+  <main>
+    <section class="upload" data-aos="fade-up">
+      <h2>Upload CSV</h2>
+      <input type="file" id="fileInput" accept=".csv" />
+      <button id="uploadBtn">Upload & Analyze</button>
+      <p class="muted">Try the included sample dataset in /backend/sample_data.csv</p>
+    </section>
+
+    <section id="kpis" class="kpis" data-aos="fade-up"></section>
+
+    <section id="charts" class="charts" data-aos="fade-up">
+      <canvas id="chart1"></canvas>
+    </section>
+
+    <section id="raw" class="raw" data-aos="fade-up">
+      <h3>Raw sample</h3>
+      <pre id="rawData"></pre>
+    </section>
+  </main>
+
+  <footer>
+    <small>Built by Himanshu Tandon • Upload a CSV to get started.</small>
+  </footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+  AOS.init({ once: true });
+</script>
+</body>
+</html>
