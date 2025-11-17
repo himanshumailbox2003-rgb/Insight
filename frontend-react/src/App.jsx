@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react'
-import axios from 'axios'
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer } from 'recharts'
-import { motion } from 'framer-motion'
-import clsx from 'clsx'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
+import { motion } from 'framer-motion';
+import clsx from 'clsx';
 
 const API = import.meta.env.VITE_API_URL || "https://insight-b91v.onrender.com/api/upload";
 
@@ -20,25 +20,20 @@ function Navbar({ theme, setTheme }) {
   );
 }
 
+/* -------------------- FIXED THEME TOGGLE --------------------- */
 function ThemeToggle({ theme, setTheme }) {
   const toggle = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     setTheme(next);
 
-    if (next === 'dark') 
-      document.documentElement.setAttribute('data-theme', 'dark');
-    else 
-      document.documentElement.removeAttribute('data-theme');
+    // FIX: ALWAYS APPLY TO <html>
+    document.querySelector("html").setAttribute("data-theme", next);
 
-    localStorage.setItem('theme', next);
+    localStorage.setItem("theme", next);
   };
 
   return (
-    <button
-      type="button"
-      onClick={toggle}
-      className="flex items-center gap-2 card px-3 py-1"
-    >
+    <button onClick={toggle} className="flex items-center gap-2 card px-3 py-1">
       <span className="muted">Theme</span>
       <div className={clsx(
         'w-12 h-6 rounded-full p-1 transition-colors duration-300',
@@ -53,59 +48,36 @@ function ThemeToggle({ theme, setTheme }) {
   );
 }
 
-/* ----------------------------------------------------
-   📌 NEW SOFTWARE DETAILS SECTION
------------------------------------------------------*/
+/* ----------------------- ABOUT SECTION ------------------------ */
 function AboutSection() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="card mb-8"
-    >
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="card mb-8">
       <h2 className="text-2xl font-semibold mb-2">What is Insight?</h2>
       <p className="muted mb-4">
         Insight is an intelligent data analytics dashboard designed to process CSV datasets 
         instantly. It extracts meaningful KPIs, identifies missing values and outliers, 
-        and visualizes your data with clean, interactive charts — all powered by a 
-        fast Flask backend and a modern React + Tailwind frontend.
+        and visualizes your data with clean, interactive charts — powered by Flask + React.
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
         <div className="p-4 rounded-md glass">
           <h3 className="text-lg font-medium mb-1">📊 Automated KPI Extraction</h3>
-          <p className="muted text-sm">
-            Rows, columns, missing values, outliers and basic stats — extracted within seconds.
-          </p>
+          <p className="muted text-sm">Rows, columns, missing values and outliers — extracted in seconds.</p>
         </div>
-
         <div className="p-4 rounded-md glass">
           <h3 className="text-lg font-medium mb-1">📈 Interactive Visualizations</h3>
-          <p className="muted text-sm">
-            Beautiful line charts generated dynamically using Recharts.
-          </p>
+          <p className="muted text-sm">Beautiful charts rendered using Recharts.</p>
         </div>
-
         <div className="p-4 rounded-md glass">
-          <h3 className="text-lg font-medium mb-1">⚡ Modern & Fast Architecture</h3>
-          <p className="muted text-sm">
-            Built with React + Tailwind + Vite, backed by a Python Flask API.
-          </p>
+          <h3 className="text-lg font-medium mb-1">⚡ Modern Architecture</h3>
+          <p className="muted text-sm">React + Tailwind + Vite + Python Flask.</p>
         </div>
       </div>
-
-      <p className="muted mt-4 text-sm">
-        A clean, lightweight, and high-performance tool suitable for developers, students, 
-        data analysts, and anyone working with CSV datasets.
-      </p>
     </motion.div>
   );
 }
 
-/* ----------------------------------------------------
-   UPLOAD CARD
------------------------------------------------------*/
+/* -------------------------- UPLOAD ---------------------------- */
 function UploadCard({ onResult }) {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -121,15 +93,11 @@ function UploadCard({ onResult }) {
     try {
       const res = await axios.post(API, fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
-        onUploadProgress: p => {
-          const pr = Math.round((p.loaded / p.total) * 100);
-          setProgress(pr);
-        }
+        onUploadProgress: p => setProgress(Math.round((p.loaded / p.total) * 100))
       });
 
       onResult(res.data);
     } catch (e) {
-      console.error(e);
       alert('Upload failed: ' + (e.response?.data?.error || e.message));
     } finally {
       setLoading(false);
@@ -139,53 +107,25 @@ function UploadCard({ onResult }) {
 
   return (
     <div className="card mb-6">
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.05 }}
-      >
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <h2 className="text-xl font-medium mb-2">Upload CSV</h2>
-        <p className="muted mb-4">
-          Drag & drop or click to choose a CSV dataset. Insight will process and visualize it instantly.
-        </p>
+        <p className="muted mb-4">Drag & drop or click to choose a CSV dataset.</p>
 
         <div className="flex gap-4 items-center">
-          <label
-            className="flex-1 p-6 border-2 border-dashed rounded-md flex flex-col items-center justify-center cursor-pointer"
+          <label className="flex-1 p-6 border-2 border-dashed rounded-md flex flex-col items-center justify-center cursor-pointer"
             onDragOver={e => e.preventDefault()}
-            onDrop={e => {
-              e.preventDefault();
-              const f = e.dataTransfer.files[0];
-              setFile(f);
-            }}
+            onDrop={e => { e.preventDefault(); setFile(e.dataTransfer.files[0]); }}
           >
-            <input
-              type="file"
-              accept=".csv"
-              onChange={e => setFile(e.target.files[0])}
-              className="hidden"
-            />
+            <input type="file" accept=".csv" className="hidden" onChange={e => setFile(e.target.files[0])} />
             <div className="muted">Click or drop file here</div>
-            <div className="mt-2">
-              {file ? file.name : <span className="muted">No file selected</span>}
-            </div>
+            <div className="mt-2">{file ? file.name : <span className="muted">No file selected</span>}</div>
           </label>
 
           <div className="w-48">
-            <button
-              className="w-full py-2 rounded-md bg-accent text-white"
-              onClick={upload}
-              disabled={loading}
-            >
+            <button className="w-full py-2 rounded-md bg-accent text-white" onClick={upload}>
               {loading ? `Uploading ${progress}%` : 'Upload & Analyze'}
             </button>
-
-            <button
-              className="w-full mt-2 py-2 rounded-md card muted"
-              onClick={() => setFile(null)}
-            >
-              Clear
-            </button>
+            <button className="w-full mt-2 py-2 rounded-md card muted" onClick={() => setFile(null)}>Clear</button>
           </div>
         </div>
       </motion.div>
@@ -193,20 +133,14 @@ function UploadCard({ onResult }) {
   );
 }
 
-/* ----------------------------------------------------
-   KPI GRID
------------------------------------------------------*/
+/* -------------------------- KPI GRID -------------------------- */
 function KPIGrid({ summary }) {
   if (!summary) return null;
 
   const { rows, columns, missing_values, outliers } = summary;
 
   return (
-    <motion.div
-      className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-    >
+    <motion.div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <div className="card"><div className="muted">Rows</div><div className="text-2xl font-semibold">{rows}</div></div>
       <div className="card"><div className="muted">Columns</div><div className="text-2xl font-semibold">{columns}</div></div>
       <div className="card"><div className="muted">Missing</div><div className="text-2xl font-semibold">{missing_values}</div></div>
@@ -215,9 +149,7 @@ function KPIGrid({ summary }) {
   );
 }
 
-/* ----------------------------------------------------
-   CHART PANE
------------------------------------------------------*/
+/* -------------------------- CHART ----------------------------- */
 function ChartPane({ sample }) {
   if (!sample || Object.keys(sample).length === 0)
     return <div className="card muted">No numeric columns to chart.</div>;
@@ -227,7 +159,7 @@ function ChartPane({ sample }) {
 
   const data = labels.map((lbl, idx) => {
     const obj = { name: lbl };
-    cols.forEach(c => (obj[c] = Number(sample[c][idx] || 0)));
+    cols.forEach(c => obj[c] = Number(sample[c][idx] || 0));
     return obj;
   });
 
@@ -252,17 +184,13 @@ function ChartPane({ sample }) {
   );
 }
 
-/* ----------------------------------------------------
-   ROOT COMPONENT
------------------------------------------------------*/
+/* --------------------------- ROOT ------------------------------ */
 export default function App() {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
 
+  /* ------------ FIXED THEME EFFECT (WORKS ON VERCEL) ----------- */
   useEffect(() => {
-    if (theme === 'dark')
-      document.documentElement.setAttribute('data-theme', 'dark');
-    else
-      document.documentElement.removeAttribute('data-theme');
+    document.querySelector("html").setAttribute("data-theme", theme);
   }, [theme]);
 
   const [result, setResult] = useState(null);
@@ -270,14 +198,9 @@ export default function App() {
   return (
     <div className="container">
       <Navbar theme={theme} setTheme={setTheme} />
-
-      {/* 📌 NEW DETAILS SECTION */}
       <AboutSection />
-
-      <UploadCard onResult={data => setResult(data)} />
-
+      <UploadCard onResult={setResult} />
       <KPIGrid summary={result?.summary} />
-
       <ChartPane sample={result?.sample} />
 
       <div className="mt-6 card muted">
