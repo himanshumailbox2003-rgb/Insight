@@ -4,12 +4,15 @@ module.exports = {
     extend: {},
   },
   safelist: [
-    'bg-[var(--bg)]',
-    'bg-[var(--card)]',
-    'text-[var(--text)]',
-    'text-[var(--muted)]',
-    'text-[var(--accent)]',
-    'shadow-[var(--glass)]',
+    {
+      pattern: /bg-\[var\(--.*\)\]/,
+    },
+    {
+      pattern: /text-\[var\(--.*\)\]/,
+    },
+    {
+      pattern: /shadow-\[var\(--.*\)\]/,
+    },
   ],
   plugins: [],
 }
