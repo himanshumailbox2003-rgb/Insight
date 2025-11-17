@@ -1,4 +1,4 @@
-const API = "http://localhost:5000/api/upload";
+const API = "https://insight-b91v.onrender.com/api/upload";
 const fileInput = document.getElementById('fileInput');
 const uploadBtn = document.getElementById('uploadBtn');
 const kpisEl = document.getElementById('kpis');
